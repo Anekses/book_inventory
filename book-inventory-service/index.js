@@ -1,8 +1,25 @@
 var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
 
 app.use(bodyParser.json());
+
+// Connection URL
+var url = 'mongodb://localhost:27017/booksdb';
+
+// Use connect method to connect to the server
+MongoClient.connect(url, function (err, db) {
+    var collection = db.collection('books');
+
+    // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
+    collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
+    console.log(collection.find());
+
+    db.close();
+});
+
 
 // gety posty
 app.get('/', function (req, res) {
@@ -16,7 +33,7 @@ app.post('/stock', function (req, res, next) {
     });
 });
 
-app.get('/error', function(req, res) {
+app.get('/error', function (req, res) {
     throw new Error('forced error');
 });
 
