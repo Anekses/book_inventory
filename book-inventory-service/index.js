@@ -9,17 +9,10 @@ app.use(bodyParser.json());
 // Connection URL
 var url = 'mongodb://localhost:27017/booksdb';
 
-// Use connect method to connect to the server
-// MongoClient.connect(url, function (err, db) {
-//     var collection = db.collection('books');
-
-//     // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
-//     // collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
-
-//     console.log(collection.find({}).toArray());
-
-//     db.close();
-// });
+var connectionPromise = MongoClient.connect(url);
+var collectionPromise = connectionPromise.then(function (db) {
+    return db.collection('books');
+})
 
 
 // gety posty
@@ -28,17 +21,10 @@ app.get('/', function (req, res) {
 });
 
 app.get('/stock', function (req, res) {
-    MongoClient.connect(url, function (err, db) {
-        var collection = db.collection('books');
-
-        // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
-        // collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
-
-        collection.find({}).toArray(function (err, items) {
-             res.send(items);
-        });
-
-        db.close();
+    collectionPromise.then(function (collection) {
+        return collection.find({}).toArray();
+    }).then(function(results) {
+        res.send(results);
     });
 })
 
