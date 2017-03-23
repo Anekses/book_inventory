@@ -10,21 +10,37 @@ app.use(bodyParser.json());
 var url = 'mongodb://localhost:27017/booksdb';
 
 // Use connect method to connect to the server
-MongoClient.connect(url, function (err, db) {
-    var collection = db.collection('books');
+// MongoClient.connect(url, function (err, db) {
+//     var collection = db.collection('books');
 
-    // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
-    collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
-    console.log(collection.find());
+//     // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
+//     // collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
 
-    db.close();
-});
+//     console.log(collection.find({}).toArray());
+
+//     db.close();
+// });
 
 
 // gety posty
 app.get('/', function (req, res) {
     res.send('Hello World!');
 });
+
+app.get('/stock', function (req, res) {
+    MongoClient.connect(url, function (err, db) {
+        var collection = db.collection('books');
+
+        // collection.insertOne({ "isbn": "abba123abba", "count": 5 });
+        // collection.updateOne({ "isbn": "abba123abba"}, {$set: { "isbn": "abba123abba", "count": 15 }});
+
+        collection.find({}).toArray(function (err, items) {
+             res.send(items);
+        });
+
+        db.close();
+    });
+})
 
 app.post('/stock', function (req, res, next) {
     res.json({
