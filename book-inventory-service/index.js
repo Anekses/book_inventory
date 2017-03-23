@@ -1,7 +1,23 @@
-var http = require('http');
-var server = http.createServer(function (req, res) {
-  res.end('hello world');
+var express = require('express')
+var app = express()
+
+function logRequest(req, res, next) {
+    console.log('incoming request at ', new Date());
+    next();
+}
+
+function auth(req, res, next) {
+    console.log('you can pass my auth');
+    next();
+}
+
+// app.use(logRequest);
+// app.use(auth);
+
+app.get('/', [logRequest, auth], function(req, res) {
+    res.send('Hello world');
 });
-server.listen(3000, function () {
-  console.log("When this callback is invoked our server is listening on port: " + 3000);
-});
+
+app.listen(3000, function() {
+    console.log('Example app listening on port 3000!');
+})
