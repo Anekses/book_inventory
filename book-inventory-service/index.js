@@ -9,7 +9,11 @@ app.use(bodyParser.json());
 // Connection URL
 var url = 'mongodb://localhost:27017/booksdb';
 
-var connectionPromise = MongoClient.connect(url);
+var connectionPromise = MongoClient.connect(url, {
+    db: {
+        bufferMaxEntries: 0
+    }
+});
 var collectionPromise = connectionPromise.then(function (db) {
     return db.collection('books');
 })
