@@ -3,20 +3,21 @@ var app = express()
 var bodyParser = require('body-parser')
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var stockRepository = require('./stockRepository');
 
 app.use(bodyParser.json());
 
-// Connection URL
-var url = 'mongodb://localhost:27017/booksdb';
+// // Connection URL
+// var url = 'mongodb://localhost:27017/booksdb';
 
-var connectionPromise = MongoClient.connect(url, {
-    db: {
-        bufferMaxEntries: 0
-    }
-});
-var collectionPromise = connectionPromise.then(function (db) {
-    return db.collection('books');
-})
+// var connectionPromise = MongoClient.connect(url, {
+//     db: {
+//         bufferMaxEntries: 0
+//     }
+// });
+// var collectionPromise = connectionPromise.then(function (db) {
+//     return db.collection('books');
+// })
 
 
 // gety posty
@@ -25,33 +26,44 @@ app.get('/', function (req, res) {
 });
 
 app.get('/stock', function (req, res, next) {
-    collectionPromise.then(function (collection) {
-        return collection.find({}).toArray();
-    }).then(function (results) {
-        res.send(results);
-    }).catch(next);
+    stockRepository
+        .findAll()
+        .then(function (result) {
+            res.send(result);
+        }).catch(next);
 });
 
 app.post('/stock', function (req, res, next) {
-    collectionPromise.then(function (collection) {
-        return collection.insertOne(req.body)
-    }).then(function () {
-        res.json({
-            isbn: req.body.isbn,
-            count: req.body.count
-        })
-    });
+    stockRepository
+        .addStock(req.body.isbn, req.body.count)
+        .then(function (result) {
+            res.json({
+                isbn: req.body.isbn,
+                count: req.body.count
+            })
+        }).catch(next);
 });
 
 app.put('/stock', function (req, res, next) {
-    collectionPromise.then(function (collection) {
-        return collection.updateOne({ isbn: req.body.isbn }, req.body)
-    }).then(function () {
-        res.json({
-            isbn: req.body.isbn,
-            count: req.body.count
+    var selector = { isbn: req.body.isbn };
+    
+    stockRepository
+        .updateStock(selector, req.body)
+        .then(function (result) {
+            res.json({
+                isbn: req.body.isbn,
+                count: req.body.count
+            })
         })
-    });
+
+    // collectionPromise.then(function (collection) {
+    //     return collection.updateOne({ isbn: req.body.isbn }, req.body)
+    // }).then(function () {
+    //     res.json({
+    //         isbn: req.body.isbn,
+    //         count: req.body.count
+    //     })
+    // });
 });
 
 app.get('/error', function (req, res) {
