@@ -53,17 +53,8 @@ app.put('/stock', function (req, res, next) {
             res.json({
                 isbn: req.body.isbn,
                 count: req.body.count
-            })
-        })
-
-    // collectionPromise.then(function (collection) {
-    //     return collection.updateOne({ isbn: req.body.isbn }, req.body)
-    // }).then(function () {
-    //     res.json({
-    //         isbn: req.body.isbn,
-    //         count: req.body.count
-    //     })
-    // });
+            });
+        });
 });
 
 app.get('/error', function (req, res) {
