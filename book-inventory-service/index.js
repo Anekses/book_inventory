@@ -20,18 +20,33 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 
-app.get('/stock', function (req, res) {
+app.get('/stock', function (req, res, next) {
     collectionPromise.then(function (collection) {
         return collection.find({}).toArray();
-    }).then(function(results) {
+    }).then(function (results) {
         res.send(results);
-    });
-})
+    }).catch(next);
+});
 
 app.post('/stock', function (req, res, next) {
-    res.json({
-        isbn: req.body.isbn,
-        count: req.body.count
+    collectionPromise.then(function (collection) {
+        return collection.insertOne(req.body)
+    }).then(function () {
+        res.json({
+            isbn: req.body.isbn,
+            count: req.body.count
+        })
+    });
+});
+
+app.put('/stock', function (req, res, next) {
+    collectionPromise.then(function (collection) {
+        return collection.updateOne({ isbn: req.body.isbn }, req.body)
+    }).then(function () {
+        res.json({
+            isbn: req.body.isbn,
+            count: req.body.count
+        })
     });
 });
 
