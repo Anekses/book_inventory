@@ -7,19 +7,6 @@ var stockRepository = require('./stockRepository');
 
 app.use(bodyParser.json());
 
-// // Connection URL
-// var url = 'mongodb://localhost:27017/booksdb';
-
-// var connectionPromise = MongoClient.connect(url, {
-//     db: {
-//         bufferMaxEntries: 0
-//     }
-// });
-// var collectionPromise = connectionPromise.then(function (db) {
-//     return db.collection('books');
-// })
-
-
 // gety posty
 app.get('/', function (req, res) {
     res.send('Hello World!');
@@ -86,4 +73,10 @@ function serverError(error, req, res, next) {
     res.send('Oh no: ' + status);
 }
 
-module.exports = app;
+module.exports = function(stockRepository){
+   findAll = stockRepository.findAll;
+   getStockByISBN = stockRepository.getStockByISBN;
+   addStock = stockRepository.addStock;
+   updateStock = stockRepository.updateStock;
+   return app;
+};

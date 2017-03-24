@@ -6,17 +6,22 @@ module.exports = function() {
             items = state;
         },
         addStock: function (isbn, count) {
-            var updated = false;
-            items.forEach(function(item) {
-                if(item.isbn === isbn) {
-                    item.count = count;
-                    updated = true;
-                }
-            });
-            if(!updated) {
-                items.push({"isbn": isbn, "count": count});
+            var item = {
+                "isbn": isbn,
+                "count": count
             }
-            return Promise.resolve();
+            // return Promise.resolve();
+            // var updated = false;
+            // items.forEach(function(item) {
+                // if(item.isbn === isbn) {
+                //     item.count = count;
+                //     updated = true;
+                // }
+            // });
+            // if(!updated) {
+            items.push(item);
+            // }
+            return Promise.resolve(item);
         },
         findAll: function () {
             return Promise.resolve(items);
