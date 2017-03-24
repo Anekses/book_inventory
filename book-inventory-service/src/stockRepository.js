@@ -38,5 +38,4 @@ findAll = function () {
     });
 }
 
-
 module.exports = { addStock, updateStock, getStockByISBN, findAll };
