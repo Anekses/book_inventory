@@ -1,4 +1,4 @@
-var stockRepository = require('./test/inMemoryRepository');
+var stockRepository = require('./src/stockRepository');
 var app = require('./src/index')(stockRepository);
 // var app = require('./src/index');
 
