@@ -1,7 +1,7 @@
 // END 2 END
 
 const request = require('supertest');
-const repo = require('./inMemoryRepository');
+const repo = require('./inMemoryRepository')();
 const app = require('../src/index')(repo);
 
 describe('Book inventory', function () {

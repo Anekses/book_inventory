@@ -3,7 +3,7 @@ var app = express()
 var bodyParser = require('body-parser')
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var stockRepository = require('./stockRepository');
+var stockRepository;
 
 app.use(bodyParser.json());
 
@@ -20,10 +20,10 @@ app.get('/stock', function (req, res, next) {
         }).catch(next);
 });
 
-app.get('/stock/:isbn', function(req, res, next) {
+app.get('/stock/:isbn', function (req, res, next) {
     stockRepository
         .getStockByISBN(req.params['isbn'])
-        .then(function(result) {
+        .then(function (result) {
             res.send(result);
         }).catch(next);
 });
@@ -41,7 +41,7 @@ app.post('/stock', function (req, res, next) {
 
 app.put('/stock', function (req, res, next) {
     var selector = { isbn: req.body.isbn };
-    
+
     stockRepository
         .updateStock(selector, req.body)
         .then(function (result) {
@@ -73,10 +73,7 @@ function serverError(error, req, res, next) {
     res.send('Oh no: ' + status);
 }
 
-module.exports = function(stockRepository){
-   findAll = stockRepository.findAll;
-   getStockByISBN = stockRepository.getStockByISBN;
-   addStock = stockRepository.addStock;
-   updateStock = stockRepository.updateStock;
-   return app;
+module.exports = function (repository) {
+    stockRepository = repository;
+    return app;
 };
