@@ -1,7 +1,7 @@
 // END 2 END
 
 const request = require('supertest');
-const app = require('../index');
+const app = require('../src/index');
 
 describe('Book inventory', function () {
     it('allows to stock up the items', function (done) {
