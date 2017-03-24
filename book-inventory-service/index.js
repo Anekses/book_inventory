@@ -33,6 +33,14 @@ app.get('/stock', function (req, res, next) {
         }).catch(next);
 });
 
+app.get('/stock/:isbn', function(req, res, next) {
+    stockRepository
+        .getStockByISBN(req.params['isbn'])
+        .then(function(result) {
+            res.send(result);
+        }).catch(next);
+});
+
 app.post('/stock', function (req, res, next) {
     stockRepository
         .addStock(req.body.isbn, req.body.count)

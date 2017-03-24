@@ -16,7 +16,7 @@ var collectionPromise = connectionPromise.then(function (db) {
 // Functions
 addStock = function (isbn, count) {
     return collectionPromise.then(function (collection) {
-        return collection.insertOne({isbn: isbn, count: count})
+        return collection.insertOne({ isbn: isbn, count: count })
     });
 }
 
@@ -26,6 +26,12 @@ updateStock = function (selector, body) {
     });
 }
 
+getStockByISBN = function (isbn) {
+    return collectionPromise.then(function (collection) {
+        return collection.find({"isbn": isbn}).limit(1).next();
+    })
+}
+
 findAll = function () {
     return collectionPromise.then(function (collection) {
         return collection.find({}).toArray();
@@ -33,4 +39,4 @@ findAll = function () {
 }
 
 
-module.exports = {addStock, updateStock, findAll};
+module.exports = { addStock, updateStock, getStockByISBN, findAll };
